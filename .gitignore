@@ -1,2 +1,3 @@
 .idea
-.pytest_cache
+.pytest_cache!
+/test/test_sqlite.db

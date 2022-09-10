@@ -4,7 +4,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from src.db.base import Base
 
-engine = create_engine("sqlite:///", echo=False)
+engine = create_engine("sqlite:///test_sqlite.db", echo=False)
 TestingSessionLocal = scoped_session(sessionmaker(bind=engine))
 
 

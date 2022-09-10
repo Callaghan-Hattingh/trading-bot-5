@@ -7,5 +7,3 @@ def test_order(session):
     OrderFactory.create()
     q = session.query(Order).all()
     assert q != []
-
-
