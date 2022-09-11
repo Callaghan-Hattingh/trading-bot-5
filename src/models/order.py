@@ -56,7 +56,7 @@ class OrderFactory(alchemy.SQLAlchemyModelFactory):
     customer_order_id = fuzzy.FuzzyText(length=50)
     time_in_force = fuzzy.FuzzyChoice(["GTC", "FOK", "IOC"])
     order_status = fuzzy.FuzzyChoice(
-        ["empty", "buy_alive", "buy_dead", "sell_alive", "sell_dead"]
+        ["empty", "buy_alive", "buy_dead", "sell_alive", "sell_dead", "error"]
     )
 
     class Meta:
