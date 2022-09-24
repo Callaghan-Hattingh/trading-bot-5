@@ -1,9 +1,9 @@
-from src.core.config import max_sell_orders, step
+from src.core.config import max_sell_lots, step
 
 
 def sell_orders_to_be_placed_min_max(price: int) -> tuple:
     min_s = (price + 1) // step * step
-    max_s = min_s + step * max_sell_orders
+    max_s = min_s + step * max_sell_lots
     return min_s, max_s
 
 
