@@ -1,2 +1,2 @@
-from .order import Order, OrderFactory
+from .lot import Lot, LotFactory
 from .trade import Trade, TradeFactory

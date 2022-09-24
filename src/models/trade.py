@@ -40,7 +40,7 @@ class TradeFactory(alchemy.SQLAlchemyModelFactory):
     quantity = fuzzy.FuzzyFloat(100)
     currency_pair = fuzzy.FuzzyChoice(["BTCZAR", "ETHZAR", "XRPZAR"])
     traded_at = LazyFunction(datetime.utcnow)
-    sequence_id = fuzzy.FuzzyInteger(10000)
+    sequence_id = fuzzy.FuzzyInteger(1018518407588352000)
     quote_volume = fuzzy.FuzzyFloat(100)
 
     class Meta:

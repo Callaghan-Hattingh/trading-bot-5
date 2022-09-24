@@ -10,15 +10,13 @@ from sqlalchemy.sql.sqltypes import TIMESTAMP
 from src.db.base import Base
 
 
-class Order(Base):
-    __tablename__ = "order"
+# Exchange or Deal
+class Lot(Base):
+    __tablename__ = "lot"
 
     id = Column(Integer, primary_key=True, nullable=False)
-    # change_time = Column(
-    #     TIMESTAMP(timezone=True), nullable=False, server_default=text("now()")
-    # )
+    origin_price = Column(Float, nullable=False, index=True, unique=True)
     change_time = Column(TIMESTAMP(timezone=True), nullable=False)
-    # valr_id = Column(UUID(as_uuid=True), nullable=False)  # UUID
     valr_id = Column(String(36), nullable=False)  # UUID
     side = Column(Enum("BUY", "SELL", names="side"), nullable=False)
     price = Column(Float, nullable=False)
@@ -33,19 +31,23 @@ class Order(Base):
     )
     order_status = Column(
         Enum(
-            "empty",
-            "buy_alive",
-            "buy_dead",
-            "sell_alive",
-            "sell_dead",
+            "neutral",
+            "buy_active",
+            "buy_passive",
+            "sell_active",
+            "sell_passive",
             "error",
             names="order_status",
         ),
         nullable=False,
     )
+    profit_total = Column(Float, nullable=False, default=0)
+    amount_of_trades = Column(Integer, nullable=False, default=0)
+    fee_currency_zar = Column(Float, nullable=False, default=0)
+    fee_currency_crypto = Column(Float, nullable=False, default=0)
 
 
-class OrderFactory(alchemy.SQLAlchemyModelFactory):
+class LotFactory(alchemy.SQLAlchemyModelFactory):
     id = Sequence(lambda n: "%s" % n)
     change_time = LazyFunction(datetime.utcnow)
     valr_id = fuzzy.FuzzyText(length=36)
@@ -57,9 +59,13 @@ class OrderFactory(alchemy.SQLAlchemyModelFactory):
     customer_order_id = fuzzy.FuzzyText(length=50)
     time_in_force = fuzzy.FuzzyChoice(["GTC", "FOK", "IOC"])
     order_status = fuzzy.FuzzyChoice(
-        ["empty", "buy_alive", "buy_dead", "sell_alive", "sell_dead"]
+        ["neutral", "buy_active", "buy_passive", "sell_active", "sell_passive"]
     )
+    profit_total = fuzzy.FuzzyFloat(10000000)
+    amount_of_trades = fuzzy.FuzzyInteger(100)
+    fee_currency_zar = fuzzy.FuzzyFloat(100)
+    fee_currency_crypto = fuzzy.FuzzyFloat(100)
 
     class Meta:
-        model = Order
+        model = Lot
         sqlalchemy_session = TestingSessionLocal

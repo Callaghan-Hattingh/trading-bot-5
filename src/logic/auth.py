@@ -2,8 +2,9 @@ import hashlib
 import hmac
 import os
 
-from src.core.config import api_secret, api_key
-from src.core.logcon import logger
+from src.core.config import api_key, api_secret
+
+# from src.core.logcon import logger
 
 
 class Auth:
@@ -24,7 +25,7 @@ class Auth:
         body - http request body as a string, optional
         """
         payload = "{}{}{}{}".format(timestamp, verb.upper(), path, body)
-        logger.debug("payload: %s", payload)
+        # logger.debug("payload: %s", payload)
         message = bytearray(payload, "utf-8")
         signature = hmac.new(
             bytearray(api_key_secret, "utf-8"), message, digestmod=hashlib.sha512
@@ -33,7 +34,7 @@ class Auth:
 
     @staticmethod
     def get_headers(timestamp: int, signature: str) -> dict:
-        logger.debug("header: time:%s, sign:%s", timestamp, signature)
+        # logger.debug("header: time:%s, sign:%s", timestamp, signature)
         header = {
             "X-VALR-API-KEY": f"{api_key}",
             "X-VALR-SIGNATURE": f"{signature}",

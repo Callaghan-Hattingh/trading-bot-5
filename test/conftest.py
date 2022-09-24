@@ -9,7 +9,7 @@ TestingSessionLocal = scoped_session(sessionmaker(bind=engine))
 
 
 @pytest.fixture()
-def session():
+def test_session():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()

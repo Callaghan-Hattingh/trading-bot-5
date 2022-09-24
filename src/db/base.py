@@ -1,18 +1,23 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///local_sqlite.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///database.db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL, echo=False)
-SessionLocal = sessionmaker(bind=engine)
-
+# SessionLocal = scoped_session(sessionmaker(bind=engine))
+# SessionLocal = sessionmaker(bind=engine)
+session = Session(bind=engine)
 Base = declarative_base()
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+def create_tables():
+    Base.metadata.create_all(bind=engine)
+
+
+# def session():
+#     s = SessionLocal(engine)
+#     try:
+#         yield s
+#     finally:
+#         s.close()
