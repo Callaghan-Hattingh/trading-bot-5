@@ -4,6 +4,7 @@ import time
 import requests
 
 from src.core.config import root_url
+
 # from src.core.logcon import logger
 from src.logic.auth import Auth
 
@@ -119,3 +120,17 @@ class ValrApi:
         else:
             raise ValueError("Must provide either customer_id or order_id")
         return generic_request(verb, path, payload=payload)
+
+    @staticmethod
+    def batch_orders(data):
+        verb = "POST"
+        path = "/v1/batch/orders"
+        payload = json.dumps({"requests": data})
+        print(payload)
+        return generic_request(verb, path, payload=payload)
+
+    @staticmethod
+    def del_all_orders_for_pair(*, pair: str = "BTCZAR"):
+        verb = "DELETE"
+        path = f"/v1/orders/{pair}"
+        return generic_request(verb, path)
