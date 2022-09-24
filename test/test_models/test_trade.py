@@ -1,4 +1,5 @@
-from src.models import Trade, TradeFactory
+from src.models import Trade
+from test.factory.trade import TradeFactory
 
 
 def test_trade(test_session):
