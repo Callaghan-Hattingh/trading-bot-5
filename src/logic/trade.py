@@ -1,5 +1,6 @@
 from src.adapter.trade import create
 from src.logic.api import ValrApi
+from src.core.config import correction_number
 
 
 def last_amount_traded():
@@ -15,4 +16,4 @@ def last_amount_traded():
         "quote_volume": r["quoteVolume"],
     }
     create(data)
-    return r["price"]
+    return int(r["price"]) - correction_number
