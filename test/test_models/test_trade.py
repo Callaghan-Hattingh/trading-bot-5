@@ -1,5 +1,6 @@
-from src.models import Trade
 from test.factory.trade import TradeFactory
+
+from src.models import Trade
 
 
 def test_trade(test_session):

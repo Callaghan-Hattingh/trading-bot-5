@@ -1,6 +1,6 @@
 from src.adapter.trade import create
-from src.logic.api import ValrApi
 from src.core.config import correction_number
+from src.logic.api import ValrApi
 
 
 def last_amount_traded():

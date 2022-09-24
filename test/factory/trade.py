@@ -1,8 +1,9 @@
-from test.conftest import TestingSessionLocal
-from src.models.trade import Trade
 from datetime import datetime
+from test.conftest import TestingSessionLocal
 
 from factory import LazyFunction, Sequence, alchemy, fuzzy
+
+from src.models.trade import Trade
 
 
 class TradeFactory(alchemy.SQLAlchemyModelFactory):

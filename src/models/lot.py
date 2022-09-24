@@ -1,13 +1,9 @@
-# from sqlalchemy.dialects.postgresql import UUID
-# from sqlalchemy.sql.expression import text
-
 from sqlalchemy import Boolean, Column, Enum, Float, Integer, String
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 
 from src.db.base import Base
 
 
-# Exchange or Deal
 class Lot(Base):
     __tablename__ = "lot"
 

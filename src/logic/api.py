@@ -4,7 +4,6 @@ import time
 import requests
 
 from src.core.config import root_url
-
 # from src.core.logcon import logger
 from src.logic.auth import Auth
 

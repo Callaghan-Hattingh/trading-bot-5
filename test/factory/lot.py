@@ -1,8 +1,9 @@
-from test.conftest import TestingSessionLocal
-from src.models.lot import Lot
 from datetime import datetime
+from test.conftest import TestingSessionLocal
 
 from factory import LazyFunction, Sequence, alchemy, fuzzy
+
+from src.models.lot import Lot
 
 
 class LotFactory(alchemy.SQLAlchemyModelFactory):
@@ -11,6 +12,7 @@ class LotFactory(alchemy.SQLAlchemyModelFactory):
     valr_id = fuzzy.FuzzyText(length=36)
     side = fuzzy.FuzzyChoice(["BUY", "SELL"])
     price = fuzzy.FuzzyFloat(10000000)
+    origin_price = fuzzy.FuzzyFloat(10000000)
     quantity = fuzzy.FuzzyFloat(100)
     currency_pair = fuzzy.FuzzyChoice(["BTCZAR", "ETHZAR", "XRPZAR"])
     post_only = fuzzy.FuzzyChoice([True, False])

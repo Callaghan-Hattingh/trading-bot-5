@@ -1,11 +1,5 @@
-from src.core.config import (
-    c_id,
-    step,
-    currency_pair,
-    quantity,
-    post_only,
-    time_in_force,
-)
+from src.core.config import (c_id, currency_pair, post_only, quantity, step,
+                             time_in_force)
 from src.logic.api import ValrApi
 
 

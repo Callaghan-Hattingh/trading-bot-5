@@ -1,5 +1,6 @@
-from src.models import Lot
 from test.factory.lot import LotFactory
+
+from src.models import Lot
 
 
 def test_lot(test_session):
