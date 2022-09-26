@@ -35,5 +35,6 @@ class Lot(Base):
     )
     profit_total = Column(Float, nullable=False, default=0)
     amount_of_trades = Column(Integer, nullable=False, default=0)
+    batchId = Column(Integer, nullable=False, default=-1)
     fee_currency_zar = Column(Float, nullable=False, default=0)
     fee_currency_crypto = Column(Float, nullable=False, default=0)

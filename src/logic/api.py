@@ -14,7 +14,10 @@ class VALRapiError(Exception):
 
 def generic_request(verb: str, path: str, *, payload: str = None) -> dict:
     timestamp = int(time.time() * 1000)
-    signature = Auth.sign_request(timestamp, verb, path)
+    if payload:
+        signature = Auth.sign_request(timestamp, verb, path, body=payload)
+    else:
+        signature = Auth.sign_request(timestamp, verb, path)
 
     url = f"{root_url}{path}"
     if payload is None:
@@ -110,7 +113,7 @@ class ValrApi:
         *, pair: str = "BTCZAR", customer_id: str = None, order_id: str = None
     ):
         verb = "DELETE"
-        path = "/v1/orders/lot"
+        path = "/v1/orders/order"
 
         if customer_id is not None:
             payload = json.dumps({"customerOrderId": customer_id, "pair": pair})
