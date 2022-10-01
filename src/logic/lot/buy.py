@@ -1,69 +1,70 @@
-from src.adapter.lot import get_origin_price
-from src.core.config import currency_pair, max_buy_orders, step, quantity, post_only, time_in_force
-from src.logic.lot.lot import gen_customer_order_id
+from src.adapter.lot import create_fresh, get_origin_price, update_fresh
+from src.core.config import currency_pair, max_buy_lots, step
+from src.logic.api import ValrApi
+from src.logic.lot.lot import batch_lot_generation, post_lot_generation
 
 
-def live_orders(price: int) -> set[int]:
+def create_planned_lots(price: float) -> set[float]:
     s = set()
     max_s = (price - 1) // step * step
-    for _ in range(1, max_buy_orders + 1):
+    for _ in range(1, max_buy_lots + 1):
         s.add(max_s - step * _)
     return s
 
 
-def check_open_orders_to_place(
-    open_orders: set[int], planned_orders: set[int]
-) -> set[int]:
-    return planned_orders.difference(open_orders)
+def open_buy_lots(open_orders: list[dict]) -> set[float]:
+    o = set()
+    if not open_orders:
+        return o
+    else:
+        for i in open_orders:
+            if i["side"] == "buy":
+                o.add(float(i["price"]))
+    return o
 
 
-def check_open_orders_placed(
-    open_orders: set[int], planned_orders: set[int]
-) -> set[int]:
-    return open_orders.difference(planned_orders)
+def lots_to_place(placed_lots: set[float], planned_lots: set[float]) -> set[float]:
+    return planned_lots.difference(placed_lots)
 
 
-def check_db_to_place(orders: set[int]) -> set[int]:
+def lots_placed(placed_lots: set[float], planned_lots: set[float]) -> set[float]:
+    return placed_lots.difference(planned_lots)
+
+
+def check_to_place(orders: set[float]) -> list[dict]:
+    lots = []
     for i in orders:
         q = get_origin_price(currency_pair, i)
         if not q:
-            print("klkjl")
-    return orders
+            bl = post_lot_generation(i, side="BUY")
+            pre_buy_db_add(bl)
+            lots.append(bl)
+    return lots
 
 
-def buy_order_generation(price: int) -> dict:
-    print(price)
-    i = gen_customer_order_id(price, currency_pair)
-    print(i)
-    data = {
-        "side": "BUY",
-        "quantity": quantity,
-        "price": price,
-        "pair": currency_pair,
-        "postOnly": post_only,
-        "customerOrderId": i,
-        "timeInForce": time_in_force,
-    }
-    print(data)
+def pre_buy_db_add(data: dict) -> None:
+    create_fresh(data)
 
 
-def buy_orders_to_be_posted(possible_buys: set) -> set:
-    # if an open buy lot is lower than buy_min -> cancel
-    # set of orders to be cancelled
+def batch_post_buy_lots(lots: list[dict]) -> bool:
+    size = 20
+    batchs = [lots[x : x + size] for x in range(0, len(lots), size)]
+    for b in batchs:
+        bo = batch_lot_generation(b, order_type="PLACE_LIMIT")
+        r = ValrApi.batch_orders(bo)
+        for q, w in zip(r["outcomes"], b):
+            if q["accepted"]:
+                update_fresh(q["orderId"], w["price"])
+            else:
+                raise Exception
+    return True
 
-    # post to valr
 
-    # update d
-    pass
-
-
-def buy_controller(price):
-    pb = live_orders(price)
-    i = set()
-    print(pb)
-    pb = check_open_orders_to_place(i, pb)
-    print(pb)
-    cb = check_open_orders_placed(i, pb)
-    print(cb)
-    pb = check_db_to_place(pb)
-    print(buy_order_generation(34334342))
+def buy_controller(price: float, open_orders: list[dict]):
+    print(f"level 0: trade:{price}, open orders:{open_orders}")
+    cpl = create_planned_lots(price)  # 1
+    obl = open_buy_lots(open_orders)  # 1
+    ltp = lots_to_place(obl, cpl)  # 2
+    lp = lots_placed(obl, cpl)  # 2
+    ctp = check_to_place(ltp)  # 3
+    bpbl = batch_post_buy_lots(ctp)

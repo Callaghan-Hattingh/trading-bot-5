@@ -12,7 +12,7 @@ def create(data):
         valr_id=data["valr_id"],
         price=data["price"],
         quantity=data["quantity"],
-        currency_pair=data["quantity"],
+        currency_pair=data["currency_pair"],
         traded_at=parser.parse(data["traded_at"]),
         taker_side=data["taker_side"],
         sequence_id=data["sequence_id"],

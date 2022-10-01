@@ -3,7 +3,7 @@ from src.core.config import correction_number
 from src.logic.api import ValrApi
 
 
-def last_amount_traded():
+def last_amount_traded() -> float:
     r = ValrApi.get_trade_hist(pair="BTCZAR", skip=0, limit=1)[0]
     data = {
         "price": r["price"],
@@ -16,4 +16,4 @@ def last_amount_traded():
         "quote_volume": r["quoteVolume"],
     }
     create(data)
-    return int(r["price"]) - correction_number
+    return float(r["price"]) - correction_number

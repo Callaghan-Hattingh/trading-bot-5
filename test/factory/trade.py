@@ -10,7 +10,7 @@ class TradeFactory(alchemy.SQLAlchemyModelFactory):
     id = Sequence(lambda n: "%s" % n)
     change_time = LazyFunction(datetime.utcnow)
     valr_id = fuzzy.FuzzyText(length=36)
-    taker_side = fuzzy.FuzzyChoice(["BUY", "SELL"])
+    taker_side = fuzzy.FuzzyChoice(["buy", "sell"])
     price = fuzzy.FuzzyFloat(10000000)
     quantity = fuzzy.FuzzyFloat(100)
     currency_pair = fuzzy.FuzzyChoice(["BTCZAR", "ETHZAR", "XRPZAR"])
