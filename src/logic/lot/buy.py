@@ -5,6 +5,11 @@ from src.logic.lot.lot import batch_lot_generation, post_lot_generation
 
 
 def create_planned_lots(price: float) -> set[float]:
+    """
+    To create the set of buy lots that should exist.
+    :param price: last traded price
+    :return: set of buy prices to be placed
+    """
     s = set()
     max_s = (price - 1) // step * step
     for _ in range(1, max_buy_lots + 1):
@@ -13,25 +18,51 @@ def create_planned_lots(price: float) -> set[float]:
 
 
 def open_buy_lots(open_orders: list[dict]) -> set[float]:
+    """
+    Filter the open orders to only include buy side orders
+    :param open_orders: open orders
+    :return: buy open orders
+    """
     o = set()
-    if not open_orders:
-        return o
-    else:
-        for i in open_orders:
-            if i["side"] == "buy":
-                o.add(float(i["price"]))
+    for i in open_orders:
+        if i["side"] == "buy":
+            o.add(float(i["price"]))
     return o
 
 
 def lots_to_place(placed_lots: set[float], planned_lots: set[float]) -> set[float]:
+    """
+    Calculate the lots to be placed
+    :param placed_lots: the lots already placed
+    :param planned_lots: the lots planned to exist
+    :return: the lots to be created
+    """
     return planned_lots.difference(placed_lots)
 
 
-def lots_placed(placed_lots: set[float], planned_lots: set[float]) -> set[float]:
-    return placed_lots.difference(planned_lots)
+def lots_placed_to_be_cancelled(
+    placed_lots: set[float], planned_lots: set[float]
+) -> set[float]:
+    """
+    Calculate which of the activate lots are to be cancelled
+    :param placed_lots: the lots already placed
+    :param planned_lots: the lots planned to exist
+    :return: the open buy lots to be cancelled
+    """
+    s = set()
+    m = min(planned_lots)
+    for _ in placed_lots:
+        if _ < m:
+            s.add(_)
+    return s
 
 
 def check_to_place(orders: set[float]) -> list[dict]:
+    """
+
+    :param orders:
+    :return:
+    """
     lots = []
     for i in orders:
         q = get_origin_price(currency_pair, i)

@@ -26,8 +26,24 @@ def test_post_lot_generation(test_session, mocker) -> None:
     r1 = post_lot_generation(1.0, side="buy")
     mocker.patch("src.logic.lot.lot.currency_pair", new="BTCZAR")
     r2 = post_lot_generation(1.0, side="sell")
-    assert r1 == {'side': 'BUY', 'quantity': 1.0, 'price': 1.0, 'pair': 'USDZAR', 'postOnly': True, 'customerOrderId': 'order', 'timeInForce': 'GTC'}
-    assert r2 == {'side': 'SELL', 'quantity': 1.0, 'price': 1, 'pair': 'BTCZAR', 'postOnly': True, 'customerOrderId': 'order', 'timeInForce': 'GTC'}
+    assert r1 == {
+        "side": "BUY",
+        "quantity": 1.0,
+        "price": 1.0,
+        "pair": "USDZAR",
+        "postOnly": True,
+        "customerOrderId": "order",
+        "timeInForce": "GTC",
+    }
+    assert r2 == {
+        "side": "SELL",
+        "quantity": 1.0,
+        "price": 1,
+        "pair": "BTCZAR",
+        "postOnly": True,
+        "customerOrderId": "order",
+        "timeInForce": "GTC",
+    }
 
 
 def test_gen_customer_order_id(test_session, mocker) -> None:

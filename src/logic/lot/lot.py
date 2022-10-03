@@ -31,7 +31,7 @@ def post_lot_generation(price: int | float, *, side: str) -> dict:
 
 
 def batch_lot_generation(
-        data: list[dict], *, order_type: str
+    data: list[dict], *, order_type: str
 ) -> list[dict[str, str | dict]]:
     reqs = []
     for _ in data:
