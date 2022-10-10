@@ -6,6 +6,8 @@ from src.logic.lot.lot import (
     post_lot_generation,
 )
 
+# from unittest.mock import patch
+
 
 def test_batch_lot_generation(test_session):
     r1 = batch_lot_generation([], order_type="something")

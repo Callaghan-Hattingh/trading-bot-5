@@ -1,5 +1,6 @@
 from src.core.config import c_id, currency_pair, post_only, quantity, time_in_force
 from src.logic.api import ValrApi
+from src.models import Lot
 
 
 def gen_customer_order_id(origin_price: float, pair: str) -> str:

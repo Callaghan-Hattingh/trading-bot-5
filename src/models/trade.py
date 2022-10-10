@@ -1,9 +1,10 @@
 from sqlalchemy import BigInteger, Column, Enum, Float, Integer, String
 from sqlalchemy.sql.sqltypes import TIMESTAMP
-
+from dataclasses import dataclass
 from src.db.base import Base
 
 
+@dataclass
 class Trade(Base):
     __tablename__ = "trade"
 

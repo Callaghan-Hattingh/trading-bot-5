@@ -1,7 +1,9 @@
-from src.adapter.lot import create_fresh, get_origin_price, update_fresh
+from src.adapter.lot import create_new, get_origin_price, update_valr_id
 from src.core.config import currency_pair, max_buy_lots, step
 from src.logic.api import ValrApi
 from src.logic.lot.lot import batch_lot_generation, post_lot_generation
+from src.models import Lot
+from datetime import datetime
 
 
 def create_planned_lots(price: float) -> set[float]:
@@ -59,7 +61,7 @@ def lots_placed_to_be_cancelled(
 
 def check_to_place(orders: set[float]) -> list[dict]:
     """
-
+    Check weather a
     :param orders:
     :return:
     """
@@ -74,7 +76,20 @@ def check_to_place(orders: set[float]) -> list[dict]:
 
 
 def pre_buy_db_add(data: dict) -> None:
-    create_fresh(data)
+    lot = Lot(
+        origin_price=data["price"],
+        change_time=datetime.utcnow(),
+        valr_id="fresh_buy",
+        side=data["side"],
+        quantity=data["quantity"],
+        price=data["price"],
+        currency_pair=data["pair"],
+        post_only=data["postOnly"],
+        customer_order_id=data["customerOrderId"],
+        time_in_force=data["timeInForce"],
+        order_status="buy_active",
+    )
+    create_new(lot)
 
 
 def batch_post_buy_lots(lots: list[dict]) -> bool:
@@ -85,7 +100,7 @@ def batch_post_buy_lots(lots: list[dict]) -> bool:
         r = ValrApi.batch_orders(bo)
         for q, w in zip(r["outcomes"], b):
             if q["accepted"]:
-                update_fresh(q["orderId"], w["price"])
+                update_valr_id(q["orderId"], w["price"])
             else:
                 raise Exception
     return True
@@ -96,6 +111,6 @@ def buy_controller(price: float, open_orders: list[dict]):
     cpl = create_planned_lots(price)  # 1
     obl = open_buy_lots(open_orders)  # 1
     ltp = lots_to_place(obl, cpl)  # 2
-    lp = lots_placed(obl, cpl)  # 2
+    # lp = lots_placed(obl, cpl)  # 2
     ctp = check_to_place(ltp)  # 3
     bpbl = batch_post_buy_lots(ctp)

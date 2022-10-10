@@ -11,7 +11,7 @@ class LotFactory(alchemy.SQLAlchemyModelFactory):
     change_time = LazyFunction(datetime.utcnow)
     valr_id = fuzzy.FuzzyText(length=36)
     side = fuzzy.FuzzyChoice(["BUY", "SELL"])
-    price = fuzzy.FuzzyFloat(10000000)
+    price = fuzzy.FuzzyInteger(10000000)
     origin_price = fuzzy.FuzzyFloat(10000000)
     quantity = fuzzy.FuzzyFloat(100)
     currency_pair = fuzzy.FuzzyChoice(["BTCZAR", "ETHZAR", "XRPZAR"])
