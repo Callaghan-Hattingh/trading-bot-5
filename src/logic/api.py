@@ -73,7 +73,7 @@ class ValrApi:
 
     @staticmethod
     def get_order_status(
-        *, pair: str = "BTCZAR", customer_id: str = None, order_id: str = None
+        *, pair: str, customer_id: str = None, order_id: str = None
     ):
         # call only directly after placing lot
         if customer_id is not None:
@@ -92,7 +92,7 @@ class ValrApi:
         price: int,
         customer_id: str = None,
         *,
-        pair: str = "BTCZAR",
+        pair: str,
         post_type: bool = True,
     ):
         verb = "POST"
@@ -111,7 +111,7 @@ class ValrApi:
 
     @staticmethod
     def del_order(
-        *, pair: str = "BTCZAR", customer_id: str = None, order_id: str = None
+        *, pair: str, customer_id: str = None, order_id: str = None
     ):
         verb = "DELETE"
         path = "/v1/orders/order"
@@ -133,7 +133,7 @@ class ValrApi:
         return generic_request(verb, path, payload=payload)
 
     @staticmethod
-    def del_all_orders_for_pair(*, pair: str = "BTCZAR"):
+    def del_all_orders_for_pair(*, pair: str):
         verb = "DELETE"
         path = f"/v1/orders/{pair}"
         return generic_request(verb, path)

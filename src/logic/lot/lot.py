@@ -1,6 +1,9 @@
 from src.core.config import c_id, currency_pair, post_only, quantity, time_in_force
 from src.logic.api import ValrApi
 from src.models import Lot
+from src.core.log import get_logger
+
+logger = get_logger(f"{__name__}")
 
 
 def gen_customer_order_id(origin_price: float, pair: str) -> str:
@@ -46,3 +49,15 @@ def minimum_quantity_generation(price: float) -> str:
         return quantity
     else:
         return f"{round(10.02 / price, 8):.8f}"
+
+
+def buy_quantity_generation(
+    price: float, origin_price: float, trade_quantity: float
+) -> float:
+    if price > origin_price:
+        return trade_quantity * price / origin_price
+    elif price == origin_price:
+        return trade_quantity
+    else:
+        logger.error(f"check lot for {origin_price}, {price}, {trade_quantity}")
+        return trade_quantity

@@ -24,5 +24,3 @@ def test_create(mocker, test_session) -> None:
     assert q2 is not None
     assert q2.price == trade1.price
     assert q2 == trade1
-
-

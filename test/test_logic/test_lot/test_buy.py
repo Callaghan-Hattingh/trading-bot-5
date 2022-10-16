@@ -66,8 +66,7 @@ def test_lots_placed_to_be_cancelled() -> None:
 
 def test_check_to_place_blank_db(test_session, mocker) -> None:
     mocker.patch("src.logic.lot.lot.c_id", new="")
-    mocker.patch("src.logic.lot.buy.get_origin_price", return_value=[])
-    # mocker.patch("src.logic.lot.buy.get_origin_price", return_value=Lot())
+    mocker.patch("src.adapter.lot.session", new=test_session)
     mocker.patch("src.logic.lot.buy.pre_buy_db_add", return_value=None)
     r1 = check_to_place({148000.0})
     assert r1 == [
