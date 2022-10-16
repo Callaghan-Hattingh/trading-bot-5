@@ -39,3 +39,17 @@ class Lot(Base):
     batchId = Column(Integer, nullable=False, default=-1)
     fee_currency_zar = Column(Float, nullable=False, default=0)
     fee_currency_crypto = Column(Float, nullable=False, default=0)
+
+
+@dataclass
+class ConLot:
+    bzar = "BTCZAR"
+    ezar = "ETHZAR"
+    xzar = "XRPZAR"
+    buy = "BUY"
+    sell = "SELL"
+    neu = "neutral"
+    buy_act = "buy_active"
+    sell_act = "sell_active"
+    sell_pass = "sell_passive"
+    err = "error"

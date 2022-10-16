@@ -20,3 +20,12 @@ class Trade(Base):
     taker_side = Column(Enum("buy", "sell", names="side"), nullable=False)
     sequence_id = Column(BigInteger, nullable=False)
     quote_volume = Column(Float, nullable=False)
+
+
+@dataclass
+class ConTrade:
+    bzar = "BTCZAR"
+    ezar = "ETHZAR"
+    xzar = "XRPZAR"
+    buy = "buy"
+    sell = "sell"
