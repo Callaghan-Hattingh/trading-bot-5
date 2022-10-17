@@ -5,6 +5,7 @@ from src.logic.lot.lot import (
     minimum_quantity_generation,
     post_lot_generation,
 )
+from src.models import ConLot
 
 # from unittest.mock import patch
 
@@ -25,9 +26,9 @@ def test_post_lot_generation(test_session, mocker) -> None:
     mocker.patch("src.logic.lot.lot.currency_pair", new="USDZAR")
     mocker.patch("src.logic.lot.lot.post_only", new=True)
     mocker.patch("src.logic.lot.lot.time_in_force", new="GTC")
-    r1 = post_lot_generation(1.0, side="buy")
+    r1 = post_lot_generation(1.0, side=ConLot.buy)
     mocker.patch("src.logic.lot.lot.currency_pair", new="BTCZAR")
-    r2 = post_lot_generation(1.0, side="sell")
+    r2 = post_lot_generation(1.0, side=ConLot.sell)
     assert r1 == {
         "side": "BUY",
         "quantity": 1.0,
