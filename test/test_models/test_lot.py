@@ -1,4 +1,5 @@
 from test.factory.lot import LotFactory
+
 from src.models import Lot
 
 

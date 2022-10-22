@@ -1,13 +1,15 @@
+from datetime import datetime
+
+from dateutil import parser
+
 from src.adapter.trade import create
 from src.core.config import correction_number
-from src.logic.api import ValrApi
-from src.models import Trade, ConTrade
-from datetime import datetime
-from dateutil import parser
+from src.logic.api import get_trade_hist
+from src.models import ConTrade, Trade
 
 
 def last_amount_traded() -> float:
-    r = ValrApi.get_trade_hist(pair=ConTrade.bzar, skip=0, limit=1)[0]
+    r = get_trade_hist(pair=ConTrade.bzar, skip=0, limit=1)[0]
     trade = Trade(
         price=r["price"],
         quantity=r["quantity"],

@@ -1,14 +1,15 @@
+from datetime import datetime
+
 from src.adapter.lot import create_new, get_origin_price, update_valr_id
 from src.core.config import currency_pair, max_buy_lots, step
-from src.logic.api import ValrApi
+from src.core.log import get_logger
+from src.logic.api import batch_orders
 from src.logic.lot.lot import (
     batch_lot_generation,
-    post_lot_generation,
     buy_quantity_generation,
+    post_lot_generation,
 )
-from src.models import Lot
-from datetime import datetime
-from src.core.log import get_logger
+from src.models import ConLot, Lot
 
 logger = get_logger(f"{__name__}")
 
@@ -67,15 +68,22 @@ def lots_placed_to_be_cancelled(
     return s
 
 
-def neutral_buy_order_status(buy: Lot) -> Lot:
+def neutral_buy_order_status(buy: Lot) -> dict:
+    # change to return a db instead
     op = buy.price
     oq = buy.quantity
     # place a buy
     buy.valr_id = "fresh_buy"
-    buy.side = "buy"
+    buy.side = ConLot.buy
     buy.price = buy.origin_price
     buy.quantity = buy_quantity_generation(op, buy.origin_price, oq)
-    buy.order_status = "buy_active"
+    buy.order_status = ConLot.buy_act
+    return buy
+
+
+def sell_act_buy_order_status(buy: Lot) -> dict:
+    buy = neutral_buy_order_status(buy)
+    buy.amount_of_trades = buy.amount_of_trades + 1
     return buy
 
 
@@ -84,25 +92,28 @@ def check_to_place(orders: set[float]) -> list[dict]:
     for i in orders:
         buy = get_origin_price(currency_pair, i)
         if not buy:
-            bl = post_lot_generation(i, side="BUY")
+            bl = post_lot_generation(i, side=ConLot.buy)
             pre_buy_db_add(bl)
             lots.append(bl)
         # check different order status
-        elif buy.order_status == "neutral":
+        elif buy.order_status == ConLot.neu:
             bl = neutral_buy_order_status(buy)
+            # db lot update
             lots.append(bl)
 
-        elif buy.order_status == "buy_active":
+        elif buy.order_status == ConLot.buy_act:
             # a possible buy has been done
             # logger.warning(f"")
             # place a sale order
             pass
-        elif buy.order_status == "sell_active":
+        elif buy.order_status == ConLot.sell_act:
             # a possible sell has been done
             # calculate a new quantity
+            bl = sell_act_buy_order_status(buy)
+
             pass
-        elif buy.order_status == "sell_passive":
-            # either a massive jump in price or an error
+        elif buy.order_status == ConLot.sell_pass:
+            # either a massive jump in price
             # place a sell order
             pass
         else:
@@ -123,7 +134,7 @@ def pre_buy_db_add(data: dict) -> None:
         post_only=data["postOnly"],
         customer_order_id=data["customerOrderId"],
         time_in_force=data["timeInForce"],
-        order_status="buy_active",
+        order_status=ConLot.buy_act,
     )
     create_new(lot)
 
@@ -133,7 +144,7 @@ def batch_post_buy_lots(lots: list[dict]) -> bool:
     batches = [lots[x : x + size] for x in range(0, len(lots), size)]
     for b in batches:
         bo = batch_lot_generation(b, order_type="PLACE_LIMIT")
-        r = ValrApi.batch_orders(bo)
+        r = batch_orders(bo)
         for q, w in zip(r["outcomes"], b):
             if q["accepted"]:
                 update_valr_id(q["orderId"], w["price"])

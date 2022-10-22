@@ -4,7 +4,7 @@ from src.logic.trade import last_amount_traded
 def test_last_amount_traded(test_session, mocker):
     mocker.patch("src.logic.trade.correction_number", new=0)
     mocker.patch(
-        "src.logic.trade.ValrApi.get_trade_hist",
+        "src.logic.trade.get_trade_hist",
         return_value=[
             {
                 "price": "354262",

@@ -1,7 +1,7 @@
 from src.core.config import c_id, currency_pair, post_only, quantity, time_in_force
-from src.logic.api import ValrApi
-from src.models import Lot
 from src.core.log import get_logger
+from src.logic.api import get_all_open_orders
+from src.models import ConLot, Lot
 
 logger = get_logger(f"{__name__}")
 
@@ -11,7 +11,7 @@ def gen_customer_order_id(origin_price: float, pair: str) -> str:
 
 
 def filtered_open_orders(*, pair: str = currency_pair) -> list[dict]:
-    oo = ValrApi.get_all_open_orders()
+    oo = get_all_open_orders()
     foo = []
     for i in oo:
         if i["currencyPair"] == pair:
@@ -19,11 +19,11 @@ def filtered_open_orders(*, pair: str = currency_pair) -> list[dict]:
     return foo
 
 
-def post_lot_generation(price: int | float, *, side: str) -> dict:
-    if currency_pair == "BTCZAR":
+def post_lot_generation(price: float, *, side: str) -> dict:
+    if currency_pair == ConLot.bzar:
         price = int(price)
     data = {
-        "side": side.upper(),
+        "side": side,
         "quantity": minimum_quantity_generation(price),
         "price": price,
         "pair": currency_pair,

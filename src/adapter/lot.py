@@ -1,7 +1,6 @@
 from src.db.base import session
 from src.models import Lot
 
-
 # def get_open_orders_from_db(pair: str):
 #     q = session.query(Lot).filter(Lot.currency_pair == pair).all()
 #     return q

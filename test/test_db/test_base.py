@@ -1,10 +1,13 @@
+from sqlalchemy import create_engine
+
 from src.db.base import create_tables
 from src.models import Lot
-from sqlalchemy import create_engine
 
 
 def test_create_tables(mocker, test_session, test_lot):
-    mocker.patch("src.db.base.engine", new=create_engine("sqlite:///test_sqlite.db", echo=False))
+    mocker.patch(
+        "src.db.base.engine", new=create_engine("sqlite:///test_sqlite.db", echo=False)
+    )
     q1 = test_session.query(Lot).all()
     assert q1[0].valr_id == "test-1"
     test_session.commit()

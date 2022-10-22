@@ -7,20 +7,17 @@ from src.logic.lot.lot import (
 )
 from src.models import ConLot
 
-# from unittest.mock import patch
+
+def test_gen_customer_order_id(mocker) -> None:
+    mocker.patch("src.logic.lot.lot.c_id", new="Random")
+    r1 = gen_customer_order_id(1.0, "BTCZAR")
+    r2 = gen_customer_order_id(44535345, "kjsdkjfk")
+    assert type(r1) == str
+    assert r1 == "RandomBTCZAR1-0"
+    assert r2 == "Randomkjsdkjfk44535345"
 
 
-def test_batch_lot_generation(test_session):
-    r1 = batch_lot_generation([], order_type="something")
-    assert r1 == []
-    r2 = batch_lot_generation([{"data": "a"}, {"data": "b"}], order_type="something")
-    assert r2 == [
-        {"type": "something", "data": {"data": "a"}},
-        {"type": "something", "data": {"data": "b"}},
-    ]
-
-
-def test_post_lot_generation(test_session, mocker) -> None:
+def test_post_lot_generation(mocker) -> None:
     mocker.patch("src.logic.lot.lot.minimum_quantity_generation", return_value=1.0)
     mocker.patch("src.logic.lot.lot.gen_customer_order_id", return_value="order")
     mocker.patch("src.logic.lot.lot.currency_pair", new="USDZAR")
@@ -49,16 +46,17 @@ def test_post_lot_generation(test_session, mocker) -> None:
     }
 
 
-def test_gen_customer_order_id(test_session, mocker) -> None:
-    mocker.patch("src.logic.lot.lot.c_id", new="Random")
-    r1 = gen_customer_order_id(1.0, "BTCZAR")
-    r2 = gen_customer_order_id(44535345, "kjsdkjfk")
-    assert type(r1) == str
-    assert r1 == "RandomBTCZAR1-0"
-    assert r2 == "Randomkjsdkjfk44535345"
+def test_batch_lot_generation():
+    r1 = batch_lot_generation([], order_type="something")
+    assert r1 == []
+    r2 = batch_lot_generation([{"data": "a"}, {"data": "b"}], order_type="something")
+    assert r2 == [
+        {"type": "something", "data": {"data": "a"}},
+        {"type": "something", "data": {"data": "b"}},
+    ]
 
 
-def test_minimum_quantity_generation(test_session, mocker) -> None:
+def test_minimum_quantity_generation(mocker) -> None:
     mocker.patch("src.logic.lot.lot.quantity", new="0.15")
     r1 = minimum_quantity_generation(100.45)
     r2 = minimum_quantity_generation(1)
@@ -71,12 +69,16 @@ def test_minimum_quantity_generation(test_session, mocker) -> None:
     assert r4 == "81.16200066"
 
 
-def test_filtered_open_orders(test_session, mocker) -> None:
-    mocker.patch("src.logic.lot.lot.ValrApi.get_all_open_orders", return_value=[])
+def test_buy_quantity_generation(mocker) -> None:
+    pass
+
+
+def test_filtered_open_orders(mocker) -> None:
+    mocker.patch("src.logic.lot.lot.get_all_open_orders", return_value=[])
     r1 = filtered_open_orders(pair="BICUSD")
     assert r1 == []
     mocker.patch(
-        "src.logic.lot.lot.ValrApi.get_all_open_orders",
+        "src.logic.lot.lot.get_all_open_orders",
         return_value=[
             {
                 "orderId": "4b8b15d0-504e-4b5f-87ee-0060eb8c0e02",

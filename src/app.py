@@ -2,7 +2,7 @@ from time import sleep
 
 from .db.base import create_tables
 from .logic import last_amount_traded
-from .logic.api import ValrApi
+from .logic.api import del_all_orders_for_pair
 from .logic.lot.buy import buy_controller
 from .logic.lot.lot import filtered_open_orders
 from .models import ConTrade
@@ -19,5 +19,5 @@ def app():
     print(foo)
     # buy_controller(t + 4000, foo)
     sleep(10)
-    r = ValrApi.del_all_orders_for_pair(pair=ConTrade.bzar)
+    r = del_all_orders_for_pair(pair=ConTrade.bzar)
     print(r)

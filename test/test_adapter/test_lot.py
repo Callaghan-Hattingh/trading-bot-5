@@ -1,6 +1,7 @@
-from src.adapter.lot import get_origin_price, create_new, update_valr_id
-from src.models import Lot
 from datetime import datetime
+
+from src.adapter.lot import create_new, get_origin_price, update_valr_id
+from src.models import Lot
 
 lot1 = Lot(
     origin_price=100,

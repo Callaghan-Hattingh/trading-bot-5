@@ -1,17 +1,18 @@
+from test.data import d1
+from unittest.mock import patch
+
 import src.core.config
 from src.logic.lot.buy import (
-    create_planned_lots,
-    open_buy_lots,
-    lots_to_place,
-    lots_placed_to_be_cancelled,
-    check_to_place,
-    pre_buy_db_add,
     batch_post_buy_lots,
     buy_controller,
+    check_to_place,
+    create_planned_lots,
+    lots_placed_to_be_cancelled,
+    lots_to_place,
+    open_buy_lots,
+    pre_buy_db_add,
 )
-from test.data import d1
 from src.models import Lot
-from unittest.mock import patch
 
 
 def test_create_planned_lots(mocker) -> None:

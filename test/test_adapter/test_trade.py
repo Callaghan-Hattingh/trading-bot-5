@@ -1,6 +1,7 @@
-from src.models import Trade
 from datetime import datetime
+
 from src.adapter.trade import create
+from src.models import Trade
 
 trade1 = Trade(
     change_time=datetime.utcnow(),
