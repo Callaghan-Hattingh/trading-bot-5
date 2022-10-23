@@ -33,5 +33,3 @@ def update_lot_buy(lot: Lot) -> None:
 
 def get_open_buy_orders() -> list[Lot]:
     return session.query(Lot).filter(Lot.order_status == ConLot.buy_act).all()
-
-

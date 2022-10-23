@@ -12,7 +12,9 @@ valr_open_buy_orders = open_orders_type()
 db_open_db_orders = get_open_buy_orders()
 
 
-def buy_orders_completed_in_last_turn(*, valr_orders: set[float], db_orders: list[Lot]) -> set[float]:
+def buy_orders_completed_in_last_turn(
+    *, valr_orders: set[float], db_orders: list[Lot]
+) -> set[float]:
     db_o = set()
     for o in db_orders:
         db_o.add(o.price)
@@ -28,6 +30,3 @@ def buy_orders_completed_in_last_turn(*, valr_orders: set[float], db_orders: lis
 
 def update_db_after_buy() -> None:
     pass
-
-
-

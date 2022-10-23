@@ -19,7 +19,7 @@ class LotFactory(alchemy.SQLAlchemyModelFactory):
     customer_order_id = fuzzy.FuzzyText(length=50)
     time_in_force = fuzzy.FuzzyChoice(["GTC", "FOK", "IOC"])
     order_status = fuzzy.FuzzyChoice(
-        ["neutral", "buy_active", "sell_active", "sell_passive"]
+        ["buy_passive", "buy_active", "sell_active", "sell_passive"]
     )
     profit_total = fuzzy.FuzzyFloat(10000000)
     amount_of_trades = fuzzy.FuzzyInteger(100)

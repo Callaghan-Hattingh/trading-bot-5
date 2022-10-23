@@ -27,7 +27,7 @@ class Lot(Base):
     )
     order_status = Column(
         Enum(
-            "neutral",
+            "buy_passive",
             "buy_active",
             "sell_active",
             "sell_passive",
@@ -50,7 +50,7 @@ class ConLot:
     xzar = "XRPZAR"
     buy = "BUY"
     sell = "SELL"
-    neu = "neutral"
+    buy_pass = "buy_passive"
     buy_act = "buy_active"
     sell_act = "sell_active"
     sell_pass = "sell_passive"
