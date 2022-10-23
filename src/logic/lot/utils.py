@@ -34,6 +34,21 @@ def post_lot_generation(price: float, *, side: str) -> dict:
     return data
 
 
+def post_lot_payload(lot: Lot) -> dict:
+    op = lot.price
+    oq = lot.quantity
+    data = {
+        "side": ConLot.buy,
+        "quantity": buy_quantity_generation(op, lot.origin_price, oq),
+        "price": lot.origin_price,
+        "pair": currency_pair,
+        "postOnly": lot.post_only,
+        "customerOrderId": lot.customer_order_id,
+        "timeInForce": lot.time_in_force,
+    }
+    return data
+
+
 def batch_lot_generation(
     data: list[dict], *, order_type: str
 ) -> list[dict[str, str | dict]]:

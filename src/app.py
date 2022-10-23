@@ -4,7 +4,7 @@ from .db.base import create_tables
 from .logic import last_amount_traded
 from .logic.api import del_all_orders_for_pair
 from .logic.lot.buy import buy_controller
-from .logic.lot.lot import filtered_open_orders
+from .logic.lot.utils import filtered_open_orders
 from .models import ConTrade
 
 

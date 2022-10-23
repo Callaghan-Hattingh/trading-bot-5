@@ -1,5 +1,5 @@
 from src.db.base import session
-from src.models import Lot
+from src.models import Lot, ConLot
 
 # def get_open_orders_from_db(pair: str):
 #     q = session.query(Lot).filter(Lot.currency_pair == pair).all()
@@ -23,3 +23,9 @@ def create_new(lot: Lot) -> None:
 def update_valr_id(valr_id: str, price: float) -> None:
     session.query(Lot).filter(Lot.origin_price == price).update({"valr_id": valr_id})
     session.commit()
+
+
+def update_lot_buy(lot: Lot) -> None:
+    lot.valr_id = "valr_id"
+    lot.order_status = ConLot.buy_act
+    session.query(Lot.origin_price == lot.origin_price).update(lot)

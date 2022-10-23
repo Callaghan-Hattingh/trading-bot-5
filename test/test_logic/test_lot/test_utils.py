@@ -1,4 +1,4 @@
-from src.logic.lot.lot import (
+from src.logic.lot.utils import (
     batch_lot_generation,
     filtered_open_orders,
     gen_customer_order_id,

@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from src.adapter.lot import create_new, get_origin_price, update_valr_id
+from src.adapter.lot import create_new, get_origin_price, update_valr_id, update_lot_buy
 from src.core.config import currency_pair, max_buy_lots, step
 from src.core.log import get_logger
 from src.logic.api import batch_orders
-from src.logic.lot.lot import (
+from src.logic.lot.utils import (
     batch_lot_generation,
-    buy_quantity_generation,
     post_lot_generation,
+    post_lot_payload,
 )
 from src.models import ConLot, Lot
 
@@ -68,25 +68,6 @@ def lots_placed_to_be_cancelled(
     return s
 
 
-def neutral_buy_order_status(buy: Lot) -> dict:
-    # change to return a db instead
-    op = buy.price
-    oq = buy.quantity
-    # place a buy
-    buy.valr_id = "fresh_buy"
-    buy.side = ConLot.buy
-    buy.price = buy.origin_price
-    buy.quantity = buy_quantity_generation(op, buy.origin_price, oq)
-    buy.order_status = ConLot.buy_act
-    return buy
-
-
-def sell_act_buy_order_status(buy: Lot) -> dict:
-    buy = neutral_buy_order_status(buy)
-    buy.amount_of_trades = buy.amount_of_trades + 1
-    return buy
-
-
 def check_to_place(orders: set[float]) -> list[dict]:
     lots = []
     for i in orders:
@@ -95,30 +76,10 @@ def check_to_place(orders: set[float]) -> list[dict]:
             bl = post_lot_generation(i, side=ConLot.buy)
             pre_buy_db_add(bl)
             lots.append(bl)
-        # check different order status
         elif buy.order_status == ConLot.neu:
-            bl = neutral_buy_order_status(buy)
-            # db lot update
+            bl = post_lot_payload(buy)
+            update_lot_buy(buy)
             lots.append(bl)
-
-        elif buy.order_status == ConLot.buy_act:
-            # a possible buy has been done
-            # logger.warning(f"")
-            # place a sale order
-            pass
-        elif buy.order_status == ConLot.sell_act:
-            # a possible sell has been done
-            # calculate a new quantity
-            bl = sell_act_buy_order_status(buy)
-
-            pass
-        elif buy.order_status == ConLot.sell_pass:
-            # either a massive jump in price
-            # place a sell order
-            pass
-        else:
-            # log error
-            logger.warning(f"error on check_to_place for {buy.origin_price}")
     return lots
 
 
