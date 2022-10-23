@@ -139,14 +139,13 @@ def test_generate_request(mocker) -> None:
 
 
 def test_generic_request(mocker) -> None:
-    mocker.patch("src.logic.api.generate_headers", return_value={'e': 5, 'f': 6})
+    mocker.patch("src.logic.api.generate_headers", return_value={"e": 5, "f": 6})
     mock_generate_request = mocker.patch("src.logic.api.generate_request")
     mock_generate_request.return_value.ok = True
     mock_generate_request.return_value.json.return_value = {"a": 1}
     r1 = api.generic_request("GET", "/v1/orders/BTCZAR")
     r2 = api.generic_request("GET", "/v1/orders/BTCZAR", payload="")
-    assert r1 == {'a': 1}
+    assert r1 == {"a": 1}
     mock_generate_request.return_value.ok = False
     with pytest.raises(api.VALRapiError):
         api.generic_request("GET", "/v1/orders/BTCZAR")
-

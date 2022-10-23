@@ -19,6 +19,21 @@ def filtered_open_orders(*, pair: str = currency_pair) -> list[dict]:
     return foo
 
 
+def open_orders_type(*, open_orders: list[dict], side_type: str) -> set[float]:
+    """
+    Filter the open orders to only include buy side orders
+    :param side_type:
+    :param open_orders: open orders
+    :return: buy open orders
+    """
+    o = set()
+    for i in open_orders:
+        # open orders side is lowercase
+        if i["side"] == side_type:
+            o.add(float(i["price"]))
+    return o
+
+
 def post_lot_generation(price: float, *, side: str) -> dict:
     if currency_pair == ConLot.bzar:
         price = int(price)

@@ -8,8 +8,9 @@ from src.logic.lot.utils import (
     batch_lot_generation,
     post_lot_generation,
     post_lot_payload,
+    open_orders_type,
 )
-from src.models import ConLot, Lot
+from src.models import ConLot, Lot, ConTrade
 
 logger = get_logger(f"{__name__}")
 
@@ -25,20 +26,6 @@ def create_planned_lots(price: float) -> set[float]:
     for _ in range(1, max_buy_lots + 1):
         s.add(max_s - step * _)
     return s
-
-
-def open_buy_lots(open_orders: list[dict]) -> set[float]:
-    """
-    Filter the open orders to only include buy side orders
-    :param open_orders: open orders
-    :return: buy open orders
-    """
-    o = set()
-    for i in open_orders:
-        # open orders side is lowercase
-        if i["side"] == "buy":
-            o.add(float(i["price"]))
-    return o
 
 
 def lots_to_place(placed_lots: set[float], planned_lots: set[float]) -> set[float]:
@@ -117,7 +104,7 @@ def batch_post_buy_lots(lots: list[dict]) -> bool:
 def buy_controller(price: float, open_orders: list[dict]):
     print(f"level 0: trade:{price}, open orders:{open_orders}")
     cpl = create_planned_lots(price)  # 1
-    obl = open_buy_lots(open_orders)  # 1
+    obl = open_orders_type(open_orders=open_orders, side_type=ConTrade.buy)
     ltp = lots_to_place(obl, cpl)  # 2
     # lp = lots_placed(obl, cpl)  # 2
     ctp = check_to_place(ltp)  # 3

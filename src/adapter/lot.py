@@ -29,3 +29,9 @@ def update_lot_buy(lot: Lot) -> None:
     lot.valr_id = "valr_id"
     lot.order_status = ConLot.buy_act
     session.query(Lot.origin_price == lot.origin_price).update(lot)
+
+
+def get_open_buy_orders() -> list[Lot]:
+    return session.query(Lot).filter(Lot.order_status == ConLot.buy_act).all()
+
+
