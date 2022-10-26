@@ -8,8 +8,8 @@ from src.core.log import get_logger
 
 logger = get_logger(f"{__name__ }")
 
-valr_open_buy_orders = open_orders_type()
-db_open_db_orders = get_open_buy_orders()
+# valr_open_buy_orders = open_orders_type()
+# db_open_db_orders = get_open_buy_orders()
 
 
 def buy_orders_completed_in_last_turn(
