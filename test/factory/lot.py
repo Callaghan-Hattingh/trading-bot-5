@@ -12,13 +12,13 @@ class LotFactory(alchemy.SQLAlchemyModelFactory):
     valr_id = fuzzy.FuzzyText(length=36)
     side = fuzzy.FuzzyChoice(["BUY", "SELL"])
     price = fuzzy.FuzzyInteger(10000000)
-    origin_price = fuzzy.FuzzyFloat(10000000)
+    lot_price = fuzzy.FuzzyFloat(10000000)
     quantity = fuzzy.FuzzyFloat(100)
     currency_pair = fuzzy.FuzzyChoice(["BTCZAR", "ETHZAR", "XRPZAR"])
     post_only = fuzzy.FuzzyChoice([True, False])
     customer_order_id = fuzzy.FuzzyText(length=50)
     time_in_force = fuzzy.FuzzyChoice(["GTC", "FOK", "IOC"])
-    order_status = fuzzy.FuzzyChoice(
+    lot_status = fuzzy.FuzzyChoice(
         ["buy_passive", "buy_active", "sell_active", "sell_passive"]
     )
     profit_total = fuzzy.FuzzyFloat(10000000)

@@ -12,6 +12,9 @@ class VALRapiError(Exception):
     pass
 
 
+lot_id_error = "Must provide either customer_id or order_id"
+
+
 def generate_request(verb: str, path: str, headers: dict, payload: str) -> Response:
     url = f"{root_url}{path}"
     if payload == "":
@@ -53,7 +56,7 @@ def get_order_history_detail(*, customer_id: str = None, order_id: str = None):
     elif order_id is not None:
         path = f"/v1/orders/history/detail/orderid/{order_id}"
     else:
-        raise ValueError("Must provide either customer_id or order_id")
+        raise ValueError(lot_id_error)
     verb = "GET"
     return generic_request(verb, path)
 
@@ -65,7 +68,7 @@ def get_order_history_summary(*, customer_id: str = None, order_id: str = None):
     elif order_id is not None:
         path = f"/v1/orders/history/summary/orderid/{order_id}"
     else:
-        raise ValueError("Must provide either customer_id or order_id")
+        raise ValueError(lot_id_error)
     verb = "GET"
     return generic_request(verb, path)
 
@@ -77,19 +80,19 @@ def get_order_status(*, pair: str, customer_id: str = None, order_id: str = None
     elif order_id is not None:
         path = f"/v1/orders/{pair}/orderid/{order_id}"
     else:
-        raise ValueError("Must provide either customer_id or order_id")
+        raise ValueError(lot_id_error)
     verb = "GET"
     return generic_request(verb, path)
 
 
 def post_limit_order(
-    side: str,
-    amount: float,
-    price: int,
-    customer_id: str,
-    *,
-    pair: str,
-    post_type: bool = True,
+        side: str,
+        amount: float,
+        price: int,
+        customer_id: str,
+        *,
+        pair: str,
+        post_type: bool = True,
 ):
     verb = "POST"
     path = "/v1/orders/limit"
@@ -115,7 +118,7 @@ def del_order(*, pair: str, customer_id: str = None, order_id: str = None):
     elif order_id is not None:
         payload = json.dumps({"orderId": order_id, "pair": pair})
     else:
-        raise ValueError("Must provide either customer_id or order_id")
+        raise ValueError(lot_id_error)
     return generic_request(verb, path, payload=payload)
 
 

@@ -10,7 +10,7 @@ from src.adapter.lot import (
 from src.models import Lot
 
 lot1 = Lot(
-    origin_price=100,
+    lot_price=100,
     change_time=datetime.utcnow(),
     valr_id="test",
     side="BUY",
@@ -20,7 +20,7 @@ lot1 = Lot(
     post_only=True,
     customer_order_id="test-12",
     time_in_force="GTC",
-    order_status="buy_active",
+    lot_status="buy_active",
 )
 
 
@@ -35,7 +35,8 @@ def test_create_new(mocker, test_session) -> None:
     assert q2 == lot1
 
 
-def test_read_origin_price_none(test_session) -> None:
+def test_read_origin_price_none(mocker, test_session) -> None:
+    mocker.patch("src.adapter.lot.session", new=test_session)
     r1 = read_origin_price("BTCZAR", 100000)
     assert r1 is None
     r2 = read_origin_price("abcxyz", 100000)
@@ -47,7 +48,7 @@ def test_read_origin_price_one(mocker, test_session, test_default_lot) -> None:
     pair = "BTCZAR"
     price = 100000.0
     r1 = read_origin_price(pair, price)
-    assert r1.origin_price == price
+    assert r1.lot_price == price
     assert r1.currency_pair == pair
 
 
@@ -55,7 +56,7 @@ def test_read_open_buy_orders(mocker, test_session, test_types_lots) -> None:
     mocker.patch("src.adapter.lot.session", new=test_session)
     r1 = read_open_buy_orders()
     assert len(r1) == 3
-    assert r1[0].origin_price == 100000.0
+    assert r1[0].lot_price == 100000.0
 
 
 def test_update_valr_id(mocker, test_session, test_default_lot) -> None:
@@ -69,10 +70,10 @@ def test_update_valr_id(mocker, test_session, test_default_lot) -> None:
 
 def test_update_lot_buy(mocker, test_session, test_types_lots) -> None:
     mocker.patch("src.adapter.lot.session", new=test_session)
-    q1 = test_session.query(Lot).filter(Lot.origin_price == 120000).one()
+    q1 = test_session.query(Lot).filter(Lot.lot_price == 120000).one()
     assert q1.valr_id == "test-2"
-    assert q1.order_status == "sell_passive"
+    assert q1.lot_status == "sell_passive"
     update_lot_buy(q1)
-    q2 = test_session.query(Lot).filter(Lot.origin_price == 120000).one()
+    q2 = test_session.query(Lot).filter(Lot.lot_price == 120000).one()
     assert q2.valr_id == "valr_id"
-    assert q2.order_status == "buy_active"
+    assert q2.lot_status == "buy_active"

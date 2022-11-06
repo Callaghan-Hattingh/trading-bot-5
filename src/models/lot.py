@@ -11,7 +11,7 @@ class Lot(Base):
     __tablename__ = "lot"
 
     id = Column(Integer, primary_key=True, nullable=False)
-    origin_price = Column(Float, nullable=False, index=True, unique=True)
+    lot_price = Column(Float, nullable=False, index=True, unique=True)
     change_time = Column(TIMESTAMP(timezone=True), nullable=False)
     valr_id = Column(String(36), nullable=False)  # UUID
     side = Column(Enum("BUY", "SELL", names="side"), nullable=False)
@@ -25,14 +25,14 @@ class Lot(Base):
     time_in_force = Column(
         Enum("GTC", "FOK", "IOC", names="time_in_force"), nullable=False
     )
-    order_status = Column(
+    lot_status = Column(
         Enum(
             "buy_passive",
             "buy_active",
             "sell_active",
             "sell_passive",
             "error",
-            names="order_status",
+            names="lot_status",
         ),
         nullable=False,
     )

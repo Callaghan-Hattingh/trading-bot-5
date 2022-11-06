@@ -54,8 +54,8 @@ def post_lot_payload(lot: Lot) -> dict:
     oq = lot.quantity
     data = {
         "side": ConLot.buy,
-        "quantity": buy_quantity_generation(op, lot.origin_price, oq),
-        "price": lot.origin_price,
+        "quantity": buy_quantity_generation(op, lot.lot_price, oq),
+        "price": lot.lot_price,
         "pair": currency_pair,
         "postOnly": lot.post_only,
         "customerOrderId": lot.customer_order_id,

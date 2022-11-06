@@ -68,7 +68,7 @@ def check_to_place(orders: set[float]) -> list[dict]:
             bl = post_lot_generation(i, side=ConLot.buy)
             pre_buy_db_add(bl)
             lots.append(bl)
-        elif buy.order_status == ConLot.buy_pass:
+        elif buy.lot_status == ConLot.buy_pass:
             bl = post_lot_payload(buy)
             update_lot_buy(buy)
             lots.append(bl)
