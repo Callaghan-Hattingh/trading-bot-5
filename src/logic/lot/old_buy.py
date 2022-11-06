@@ -1,6 +1,11 @@
 from datetime import datetime
 
-from src.adapter.lot import create_new, get_origin_price, update_valr_id, update_lot_buy
+from src.adapter.lot import (
+    create_new,
+    read_origin_price,
+    update_valr_id,
+    update_lot_buy,
+)
 from src.core.config import currency_pair, max_buy_lots, step
 from src.core.log import get_logger
 from src.logic.api import batch_orders
@@ -58,7 +63,7 @@ def lots_placed_to_be_cancelled(
 def check_to_place(orders: set[float]) -> list[dict]:
     lots = []
     for i in orders:
-        buy = get_origin_price(currency_pair, i)
+        buy = read_origin_price(currency_pair, i)
         if not buy:
             bl = post_lot_generation(i, side=ConLot.buy)
             pre_buy_db_add(bl)

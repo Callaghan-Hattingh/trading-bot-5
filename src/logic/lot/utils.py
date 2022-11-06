@@ -75,6 +75,7 @@ def batch_lot_generation(
 
 
 def minimum_quantity_generation(price: float) -> str:
+    # should return float not string string requirement should be on api adapter
     if price * float(quantity) > 10:
         return quantity
     else:
@@ -82,7 +83,7 @@ def minimum_quantity_generation(price: float) -> str:
 
 
 def buy_quantity_generation(
-    price: float, origin_price: float, trade_quantity: float
+    *, price: float, origin_price: float, trade_quantity: float
 ) -> float:
     if price > origin_price:
         return trade_quantity * price / origin_price

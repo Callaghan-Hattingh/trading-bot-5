@@ -4,7 +4,7 @@ from src.db.base import create_tables
 from src.models import Lot
 
 
-def test_create_tables(mocker, test_session, test_lot):
+def test_create_tables(mocker, test_session, test_default_lot):
     mocker.patch(
         "src.db.base.engine", new=create_engine("sqlite:///test_sqlite.db", echo=False)
     )

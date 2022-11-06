@@ -2,21 +2,24 @@ from src.logic import api
 from src.models import ConTrade, ConLot
 import pytest
 
+path_generic_request = "src.logic.api.generic_request"
+default_order_path = "/v1/orders/BTCZAR"
+
 
 def test_get_all_open_orders(mocker) -> None:
-    mocker.patch("src.logic.api.generic_request", new=lambda x, y: (x, y))
+    mocker.patch(path_generic_request, new=lambda x, y: (x, y))
     r1 = api.get_all_open_orders()
     assert r1 == ("GET", "/v1/orders/open")
 
 
 def test_get_trade_hist(mocker) -> None:
-    mocker.patch("src.logic.api.generic_request", new=lambda x, y: (x, y))
+    mocker.patch(path_generic_request, new=lambda x, y: (x, y))
     r1 = api.get_trade_hist(pair=ConTrade.bzar, skip=2, limit=10)
     assert r1 == ("GET", "/v1/marketdata/BTCZAR/tradehistory?skip=2&limit=10")
 
 
 def test_get_order_history_detail(mocker) -> None:
-    mocker.patch("src.logic.api.generic_request", new=lambda x, y: (x, y))
+    mocker.patch(path_generic_request, new=lambda x, y: (x, y))
     r1 = api.get_order_history_detail(customer_id="test-1")
     r2 = api.get_order_history_detail(order_id="test-2")
     assert r1 == ("GET", "/v1/orders/history/detail/customerorderid/test-1")
@@ -26,7 +29,7 @@ def test_get_order_history_detail(mocker) -> None:
 
 
 def test_get_order_history_summary(mocker) -> None:
-    mocker.patch("src.logic.api.generic_request", new=lambda x, y: (x, y))
+    mocker.patch(path_generic_request, new=lambda x, y: (x, y))
     r1 = api.get_order_history_summary(customer_id="test-1")
     r2 = api.get_order_history_summary(order_id="test-2")
     assert r1 == ("GET", "/v1/orders/history/summary/customerorderid/test-1")
@@ -36,7 +39,7 @@ def test_get_order_history_summary(mocker) -> None:
 
 
 def test_get_order_status(mocker) -> None:
-    mocker.patch("src.logic.api.generic_request", new=lambda x, y: (x, y))
+    mocker.patch(path_generic_request, new=lambda x, y: (x, y))
     r1 = api.get_order_status(pair=ConTrade.bzar, customer_id="trade-1")
     r2 = api.get_order_status(pair=ConTrade.bzar, order_id="trade-2")
     assert r1 == ("GET", "/v1/orders/BTCZAR/customerorderid/trade-1")
@@ -46,9 +49,7 @@ def test_get_order_status(mocker) -> None:
 
 
 def test_post_limit_order(mocker) -> None:
-    mocker.patch(
-        "src.logic.api.generic_request", new=lambda *args, **kwargs: (args, kwargs)
-    )
+    mocker.patch(path_generic_request, new=lambda *args, **kwargs: (args, kwargs))
     r1 = api.post_limit_order(
         side=ConLot.buy,
         amount=0.2343,
@@ -66,9 +67,7 @@ def test_post_limit_order(mocker) -> None:
 
 
 def test_del_order(mocker) -> None:
-    mocker.patch(
-        "src.logic.api.generic_request", new=lambda *args, **kwargs: (args, kwargs)
-    )
+    mocker.patch(path_generic_request, new=lambda *args, **kwargs: (args, kwargs))
     r1 = api.del_order(pair=ConLot.bzar, customer_id="cid1")
     r2 = api.del_order(pair=ConLot.bzar, order_id="cid1")
     assert r1 == (
@@ -84,9 +83,7 @@ def test_del_order(mocker) -> None:
 
 
 def test_batch_orders(mocker) -> None:
-    mocker.patch(
-        "src.logic.api.generic_request", new=lambda *args, **kwargs: (args, kwargs)
-    )
+    mocker.patch(path_generic_request, new=lambda *args, **kwargs: (args, kwargs))
     r1 = api.batch_orders({"a": 1, "b": 2, "c": 3})
     assert r1 == (
         ("POST", "/v1/batch/orders"),
@@ -95,17 +92,15 @@ def test_batch_orders(mocker) -> None:
 
 
 def test_del_all_orders_for_pair(mocker) -> None:
-    mocker.patch(
-        "src.logic.api.generic_request", new=lambda *args, **kwargs: (args, kwargs)
-    )
+    mocker.patch(path_generic_request, new=lambda *args, **kwargs: (args, kwargs))
     r1 = api.del_all_orders_for_pair(pair=ConLot.bzar)
-    assert r1 == (("DELETE", "/v1/orders/BTCZAR"), {})
+    assert r1 == (("DELETE", default_order_path), {})
 
 
 def test_generate_headers(mocker) -> None:
     mocker.patch("src.logic.api.time.time", return_value=1666205773.3395753)
-    r1 = api.generate_headers("POST", "/v1/orders/BTCZAR", "")
-    r2 = api.generate_headers("GET", "/v1/orders/BTCZAR", "{'a':1, 'b',2}")
+    r1 = api.generate_headers("POST", default_order_path, "")
+    r2 = api.generate_headers("GET", default_order_path, "{'a':1, 'b',2}")
     assert r1 == {
         "X-VALR-API-KEY": "009a2e4198c0953de7b985b8ae0bd620bc131638a857051fef1fa8214540fb23",
         "X-VALR-SIGNATURE": "3910e57e2881ee7a48c8654c443ac4d42a7c55a5cf41143c9be479dcc536c10f69b8ffc112ac6921eb63f5180bf70d88e350171387c85f753b2e7089e773e92c",
@@ -125,9 +120,9 @@ def test_generate_request(mocker) -> None:
         "src.logic.api.requests.request", new=lambda *args, **kwargs: (args, kwargs)
     )
     r1 = api.generate_request(
-        "GET", "/v1/orders/BTCZAR", {"a": 1, "b": 2}, "{'c': 3, 'd': 4}"
+        "GET", default_order_path, {"a": 1, "b": 2}, "{'c': 3, 'd': 4}"
     )
-    r2 = api.generate_request("GET", "/v1/orders/BTCZAR", {"a": 1, "b": 2}, "")
+    r2 = api.generate_request("GET", default_order_path, {"a": 1, "b": 2}, "")
     assert r1 == (
         ("GET", "https://api.valr.com/v1/orders/BTCZAR"),
         {"headers": {"a": 1, "b": 2}, "data": "{'c': 3, 'd': 4}"},
@@ -143,9 +138,10 @@ def test_generic_request(mocker) -> None:
     mock_generate_request = mocker.patch("src.logic.api.generate_request")
     mock_generate_request.return_value.ok = True
     mock_generate_request.return_value.json.return_value = {"a": 1}
-    r1 = api.generic_request("GET", "/v1/orders/BTCZAR")
-    r2 = api.generic_request("GET", "/v1/orders/BTCZAR", payload="")
+    r1 = api.generic_request("GET", default_order_path)
+    r2 = api.generic_request("GET", default_order_path, payload="")
     assert r1 == {"a": 1}
+    assert r2 == {"a": 1}
     mock_generate_request.return_value.ok = False
     with pytest.raises(api.VALRapiError):
-        api.generic_request("GET", "/v1/orders/BTCZAR")
+        api.generic_request("GET", default_order_path)

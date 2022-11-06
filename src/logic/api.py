@@ -28,8 +28,6 @@ def generate_headers(verb, path, payload) -> dict:
 def generic_request(verb: str, path: str, *, payload: str = "") -> dict:
     headers = generate_headers(verb, path, payload)
     response = generate_request(verb, path, headers, payload)
-    print(response.ok)
-    print(response.json())
     if response.ok:
         return response.json()
     else:
