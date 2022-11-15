@@ -54,7 +54,7 @@ def post_lot_payload(lot: Lot) -> dict:
     oq = lot.quantity
     data = {
         "side": ConLot.buy,
-        "quantity": buy_quantity_generation(op, lot.lot_price, oq),
+        "quantity": buy_pass_quantity_generation(op, lot.lot_price, oq),
         "price": lot.lot_price,
         "pair": currency_pair,
         "postOnly": lot.post_only,
@@ -82,13 +82,13 @@ def minimum_quantity_generation(price: float) -> str:
         return f"{round(10.02 / price, 8):.8f}"
 
 
-def buy_quantity_generation(
-    *, price: float, origin_price: float, trade_quantity: float
+def buy_pass_quantity_generation(
+    *, price: float, lot_price: float, trade_quantity: float
 ) -> float:
-    if price > origin_price:
-        return trade_quantity * price / origin_price
-    elif price == origin_price:
+    if price > lot_price:
+        return trade_quantity * price / lot_price
+    elif price == lot_price:
         return trade_quantity
     else:
-        logger.error(f"check lot for {origin_price}, {price}, {trade_quantity}")
+        logger.error(f"check lot for {lot_price}, {price}, {trade_quantity}")
         return trade_quantity

@@ -9,7 +9,9 @@ from src.core.config import currency_pair
 def test_none_buy_orders_completed_in_last_turn() -> None:
     valr_orders = set()
     db_orders = []
-    r1 = buy_act_lots_completed_in_last_turn(valr_buy_lots=valr_orders, db_buy_lots=db_orders)
+    r1 = buy_act_lots_completed_in_last_turn(
+        valr_buy_lots=valr_orders, db_buy_lots=db_orders
+    )
     assert r1 == set()
 
 
@@ -34,18 +36,25 @@ def test_buy_orders_completed_in_last_turn(
     assert r4 == {100000.0, 101000.0}
 
 
-# def test_update_db_after_buy(mocker, test_session, test_types_lots) -> None:
-#     mocker.patch("src.adapter.lot.session", new=test_session)
-#     origin_price_test = 107000
-#     q1: Lot = test_session.query(Lot).filter(Lot.lot_price == origin_price_test).one()
-#     q1q = q1.quantity
-#     q1t = q1.amount_of_trades
-#     assert q1.price > q1.lot_price
-#     update_db_after_buy(
-#         lots_to_update={origin_price_test}, pair=currency_pair
-#     )
-#     q2: Lot = test_session.query(Lot).filter(Lot.lot_price == origin_price_test).one()
-#     assert q2.price == q1.lot_price == q2.lot_price
-#     assert q2.quantity > q1q
-#     assert q2.lot_status == ConLot.buy_pass
-#     assert q2.amount_of_trades == q1t + 1
+def test_update_db_after_buy_of_lot(mocker, test_session, test_types_lots) -> None:
+    mocker.patch("src.adapter.lot.session", new=test_session)
+    mocker.patch("src.adapter.utils.session", new=test_session)
+    # update_db_after_buy_of_lot(lots_to_update=set(), pair=currency_pair)
+    q1 = (
+        test_session.query(Lot)
+        .filter(Lot.currency_pair == currency_pair)
+        .filter(Lot.lot_price == 100000)
+        .filter(Lot.lot_status == ConLot.buy_act)
+        .one_or_none()
+    )
+    assert q1.lot_price == 100000.0
+    assert q1.price == q1.lot_price
+    update_db_after_buy_of_lot(lots_to_update={100000.0}, pair=currency_pair)
+    q2 = (
+        test_session.query(Lot)
+        .filter(Lot.currency_pair == currency_pair)
+        .filter(Lot.lot_price == 100000)
+        .filter(Lot.lot_status == ConLot.sell_pass)
+        .one_or_none()
+    )
+    assert q2.price == 102000.0

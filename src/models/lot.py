@@ -31,7 +31,6 @@ class Lot(Base):
             "buy_active",
             "sell_active",
             "sell_passive",
-            "error",
             names="lot_status",
         ),
         nullable=False,

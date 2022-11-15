@@ -2,7 +2,7 @@ from datetime import datetime
 
 from src.adapter.lot import (
     create_new,
-    read_origin_price,
+    read_lot_price,
     update_valr_id,
     read_open_buy_orders,
     update_lot_buy,
@@ -37,9 +37,9 @@ def test_create_new(mocker, test_session) -> None:
 
 def test_read_origin_price_none(mocker, test_session) -> None:
     mocker.patch("src.adapter.lot.session", new=test_session)
-    r1 = read_origin_price("BTCZAR", 100000)
+    r1 = read_lot_price("BTCZAR", 100000.0, lot_status="buy_active")
     assert r1 is None
-    r2 = read_origin_price("abcxyz", 100000)
+    r2 = read_lot_price("abcxyz", 100000.0, lot_status="buy_active")
     assert r2 is None
 
 
@@ -47,7 +47,7 @@ def test_read_origin_price_one(mocker, test_session, test_default_lot) -> None:
     mocker.patch("src.adapter.lot.session", new=test_session)
     pair = "BTCZAR"
     price = 100000.0
-    r1 = read_origin_price(pair, price)
+    r1 = read_lot_price(pair, price, lot_status="buy_active")
     assert r1.lot_price == price
     assert r1.currency_pair == pair
 

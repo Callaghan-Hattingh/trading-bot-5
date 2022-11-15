@@ -86,13 +86,13 @@ def get_order_status(*, pair: str, customer_id: str = None, order_id: str = None
 
 
 def post_limit_order(
-        side: str,
-        amount: float,
-        price: int,
-        customer_id: str,
-        *,
-        pair: str,
-        post_type: bool = True,
+    side: str,
+    amount: float,
+    price: int,
+    customer_id: str,
+    *,
+    pair: str,
+    post_type: bool = True,
 ):
     verb = "POST"
     path = "/v1/orders/limit"

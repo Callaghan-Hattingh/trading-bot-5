@@ -7,11 +7,12 @@ def create_new(lot: Lot) -> None:
     session.commit()
 
 
-def read_origin_price(pair: str, origin_price: float) -> Lot | None:
+def read_lot_price(pair: str, lot_price: float, lot_status: str) -> Lot | None:
     return (
         session.query(Lot)
         .filter(Lot.currency_pair == pair)
-        .filter(Lot.lot_price == origin_price)
+        .filter(Lot.lot_price == lot_price)
+        .filter(Lot.lot_status == lot_status)
         .one_or_none()
     )
 

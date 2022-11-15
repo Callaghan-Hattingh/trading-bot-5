@@ -24,7 +24,12 @@ from test.factory.lot import LotFactory
 
 @pytest.fixture
 def test_default_lot(test_session):
-    LotFactory.create(lot_price=100000, currency_pair="BTCZAR", valr_id="test-1")
+    LotFactory.create(
+        lot_price=100000,
+        currency_pair="BTCZAR",
+        valr_id="test-1",
+        lot_status="buy_active",
+    )
 
 
 @pytest.fixture
@@ -40,7 +45,7 @@ def test_types_lots(test_session):
     for i in range(100000, 103000, 1000):
         LotFactory.create(
             lot_price=i,
-            price=i * 1.01,
+            price=i,
             currency_pair="BTCZAR",
             valr_id="test-2",
             lot_status="buy_active",
