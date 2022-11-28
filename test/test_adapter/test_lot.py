@@ -4,7 +4,7 @@ from src.adapter.lot import (
     create_new,
     read_lot_price,
     update_valr_id,
-    read_open_buy_orders,
+    read_open_buy_act_lots,
     update_lot_buy,
 )
 from src.models import Lot
@@ -54,7 +54,7 @@ def test_read_origin_price_one(mocker, test_session, test_default_lot) -> None:
 
 def test_read_open_buy_orders(mocker, test_session, test_types_lots) -> None:
     mocker.patch("src.adapter.lot.session", new=test_session)
-    r1 = read_open_buy_orders()
+    r1 = read_open_buy_act_lots()
     assert len(r1) == 3
     assert r1[0].lot_price == 100000.0
 

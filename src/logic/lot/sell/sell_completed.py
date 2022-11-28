@@ -2,6 +2,7 @@
 # Get VALR open sell lots and compare with db
 # Update db if sell completed
 # sell active to buy passive
+# no api calls required
 
 
 from src.models import Lot, ConLot

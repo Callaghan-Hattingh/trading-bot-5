@@ -1,5 +1,7 @@
 from src.db.base import session
 from src.models import Lot, ConLot
+from uuid import UUID
+from src.core.config import currency_pair
 
 
 def create_new(lot: Lot) -> None:
@@ -17,8 +19,18 @@ def read_lot_price(pair: str, lot_price: float, lot_status: str) -> Lot | None:
     )
 
 
-def read_open_buy_orders() -> list[Lot]:
+def read_open_buy_act_lots() -> list[Lot]:
     return session.query(Lot).filter(Lot.lot_status == ConLot.buy_act).all()
+
+
+def read_lot_id_of_buy_act(*, lot_price: float) -> str:
+    return (
+        session.query(Lot)
+        .filter(Lot.lot_price == lot_price)
+        .filter(Lot.lot_status == ConLot.buy_act)
+        .filter(Lot.currency_pair == currency_pair)
+        .values(Lot.valr_id)
+    )
 
 
 def update_valr_id(valr_id: str, price: float) -> None:

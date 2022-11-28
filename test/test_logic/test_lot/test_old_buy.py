@@ -31,36 +31,36 @@ from src.models import Lot
 
 # def test_lots_to_place() -> None:
 #     r1 = lots_to_place(
-#         placed_lots={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
-#         planned_lots={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
+#         placed_buy_act={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
+#         planned_buy_act={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
 #     )
 #     assert r1 == set()
 #     r2 = lots_to_place(
-#         placed_lots={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
-#         planned_lots={148000.0, 146000.0},
+#         placed_buy_act={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
+#         planned_buy_act={148000.0, 146000.0},
 #     )
 #     assert r2 == set()
 #     r3 = lots_to_place(
-#         placed_lots={148000.0, 146000.0},
-#         planned_lots={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
+#         placed_buy_act={148000.0, 146000.0},
+#         planned_buy_act={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
 #     )
 #     assert r3 == {144000.0, 150000.0, 142000.0}
 #
 #
 # def test_lots_placed_to_be_cancelled() -> None:
 #     r1 = lots_placed_to_be_cancelled(
-#         placed_lots={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
-#         planned_lots={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
+#         placed_buy_act={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
+#         planned_buy_act={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
 #     )
 #     assert r1 == set()
 #     r2 = lots_placed_to_be_cancelled(
-#         placed_lots={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
-#         planned_lots={148000.0, 146000.0},
+#         placed_buy_act={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
+#         planned_buy_act={148000.0, 146000.0},
 #     )
 #     assert r2 == {144000.0, 142000.0}
 #     r3 = lots_placed_to_be_cancelled(
-#         placed_lots={148000.0, 146000.0},
-#         planned_lots={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
+#         placed_buy_act={148000.0, 146000.0},
+#         planned_buy_act={148000.0, 144000.0, 142000.0, 150000.0, 146000.0},
 #     )
 #     assert r3 == set()
 

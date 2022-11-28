@@ -92,3 +92,7 @@ def buy_pass_quantity_generation(
     else:
         logger.error(f"check lot for {lot_price}, {price}, {trade_quantity}")
         return trade_quantity
+
+
+def create_split_batches_from_list(batches: list, size: int) -> list[list]:
+    return [batches[x : x + size] for x in range(0, len(batches), size)]
