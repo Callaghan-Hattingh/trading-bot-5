@@ -29,7 +29,8 @@ def read_lot_id_of_buy_act(*, lot_price: float) -> str:
         .filter(Lot.lot_price == lot_price)
         .filter(Lot.lot_status == ConLot.buy_act)
         .filter(Lot.currency_pair == currency_pair)
-        .values(Lot.valr_id)
+        .with_entities(Lot.valr_id)
+        .one()
     )
 
 

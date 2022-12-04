@@ -6,6 +6,7 @@ from src.adapter.lot import (
     update_valr_id,
     read_open_buy_act_lots,
     update_lot_buy,
+    read_lot_id_of_buy_act,
 )
 from src.models import Lot
 
@@ -57,6 +58,13 @@ def test_read_open_buy_orders(mocker, test_session, test_types_lots) -> None:
     r1 = read_open_buy_act_lots()
     assert len(r1) == 3
     assert r1[0].lot_price == 100000.0
+
+
+def test_read_lot_id_of_buy_act(mocker, test_session, test_types_lots) -> None:
+    mocker.patch("src.adapter.lot.session", new=test_session)
+    mocker.patch("src.adapter.lot.currency_pair", new="BTCZAR")
+    r1 = read_lot_id_of_buy_act(lot_price=100000.0)
+    assert r1[0] == "test-2"
 
 
 def test_update_valr_id(mocker, test_session, test_default_lot) -> None:

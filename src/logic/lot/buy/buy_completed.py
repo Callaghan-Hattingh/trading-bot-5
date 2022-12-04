@@ -6,6 +6,7 @@
 
 
 from src.models import Lot, ConLot
+from src.core.config import currency_pair
 from src.core.log import get_logger
 from src.adapter.lot import read_lot_price
 from src.adapter.utils import commit
@@ -33,9 +34,13 @@ def buy_act_lots_completed_in_last_turn(
 
 
 def update_db_after_buy_of_lot(*, lots_to_update: set[float], pair: str) -> None:
-    # calculate a
     for lot in lots_to_update:
         l = read_lot_price(pair=pair, lot_price=lot, lot_status=ConLot.buy_act)
         l.price = round(l.lot_price * 1.02, 8)
         l.lot_status = ConLot.sell_pass
         commit()
+
+
+def buy_completed_controller(*, valr_buy_lots: set[float], db_buy_lots: list[Lot]) -> None:
+    buy_lots_bought = buy_act_lots_completed_in_last_turn(valr_buy_lots=valr_buy_lots, db_buy_lots=db_buy_lots)
+    update_db_after_buy_of_lot(lots_to_update=buy_lots_bought, pair=currency_pair)

@@ -49,3 +49,7 @@ def update_db_after_sell_of_lot(*, lots_to_update: set[float], pair: str) -> Non
         l.profit_total += (op - l.price) * (oq * l.price / op)
         l.lot_status = ConLot.buy_pass
         commit()
+
+
+def sell_completed_controller() -> None:
+    pass

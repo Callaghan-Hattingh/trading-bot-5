@@ -5,14 +5,8 @@
 # buy cancel api call
 
 
-from datetime import datetime
-
 from src.adapter.lot import (
-    create_new,
-    read_lot_price,
     read_lot_id_of_buy_act,
-    update_valr_id,
-    update_lot_buy,
 )
 from src.core.config import (
     currency_pair,
@@ -23,13 +17,6 @@ from src.core.config import (
 )
 from src.core.log import get_logger
 from src.logic.api import batch_orders
-from src.logic.lot.utils import (
-    batch_lot_generation,
-    post_lot_generation,
-    post_lot_payload,
-    open_orders_type,
-)
-from src.models import ConLot, Lot, ConTrade
 
 logger = get_logger(f"{__name__}")
 
@@ -61,6 +48,7 @@ def list_of_planned_buy_act_to_buy_pass_lots(
 
 # first do api request
 def create_cancel_lots_batch_buy_act_to_buy_pass(
+    *,
     buy_act_lots_to_cancel: set[float],
 ) -> list[dict]:
     """
